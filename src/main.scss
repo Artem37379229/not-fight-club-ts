@@ -1,0 +1,12 @@
+@use 'scss-reset/total';
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body:has(.modal.modal-active) {
+  overflow: hidden;
+}

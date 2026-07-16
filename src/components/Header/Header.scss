@@ -1,0 +1,26 @@
+.header {
+  background: #140F0B;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px 20px;
+  }
+
+  &__list {
+    display: flex;
+    gap: 20px;
+
+    &-item {
+      text-transform: uppercase;
+      color: #FFFFE0;
+      transition: color .3s ease-in-out;
+
+      &:hover {
+        color: #FFD700;
+      }
+    }
+  }
+}
