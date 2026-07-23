@@ -1,8 +1,11 @@
 import type { ICharacter } from "./types/types.ts";
 
-const enemies: ICharacter[] = [
+export type TEnemies = ICharacter & {name: string}
+
+const enemies: TEnemies = [
     {
         id: 11,
+        name: "Tengu",
         emoji: "👺",
         health: 142,
         maxHealth: 142,
@@ -12,6 +15,7 @@ const enemies: ICharacter[] = [
     },
     {
         id: 12,
+        name: "Skeleton",
         emoji: "💀",
         health: 118,
         maxHealth: 118,
@@ -21,6 +25,7 @@ const enemies: ICharacter[] = [
     },
     {
         id: 13,
+        name: "Scorpion",
         emoji: "🦂",
         health: 135,
         maxHealth: 135,
@@ -30,6 +35,7 @@ const enemies: ICharacter[] = [
     },
     {
         id: 14,
+        name: "Wolf",
         emoji: "🐺",
         health: 128,
         maxHealth: 128,
@@ -39,6 +45,7 @@ const enemies: ICharacter[] = [
     },
     {
         id: 15,
+        name: "Villain",
         emoji: "🦹",
         health: 146,
         maxHealth: 146,
@@ -48,6 +55,7 @@ const enemies: ICharacter[] = [
     },
     {
         id: 16,
+        name: "Spider",
         emoji: "🕷️",
         health: 115,
         maxHealth: 115,
@@ -57,6 +65,7 @@ const enemies: ICharacter[] = [
     },
     {
         id: 17,
+        name: "Serpent",
         emoji: "🐍",
         health: 130,
         maxHealth: 130,
@@ -66,6 +75,7 @@ const enemies: ICharacter[] = [
     },
     {
         id: 18,
+        name: "Eagle",
         emoji: "🦅",
         health: 137,
         maxHealth: 137,
@@ -75,6 +85,7 @@ const enemies: ICharacter[] = [
     },
     {
         id: 19,
+        name: "Troll",
         emoji: "🧌",
         health: 150,
         maxHealth: 150,
@@ -84,6 +95,7 @@ const enemies: ICharacter[] = [
     },
     {
         id: 20,
+        name: "Alien",
         emoji: "👾",
         health: 123,
         maxHealth: 123,

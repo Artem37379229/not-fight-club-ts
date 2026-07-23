@@ -13,7 +13,7 @@ export class FormView {
             name: "div",
             classes: ["form"],
             root,
-        });
+        }) as HTMLDivElement;
 
         this.form = createForm({
             name: "form",
@@ -25,7 +25,7 @@ export class FormView {
             name: "div",
             classes: ["form__group"],
             root: this.form,
-        });
+        }) as HTMLDivElement;
 
         const input = createInput({
             name: "input",
@@ -45,14 +45,14 @@ export class FormView {
             text: "Введите имя",
             htmlFor: "formInput",
             root: wrapper,
-        });
+        }) as HTMLLabelElement;
 
         const button = createElement({
             name: "button",
             classes: ["form__button"],
             text: buttonText,
             root: this.form,
-        });
+        }) as HTMLButtonElement;
     }
 
     public getElements ()  {

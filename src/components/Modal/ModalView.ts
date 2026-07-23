@@ -30,7 +30,7 @@ export class ModalView {
     }
 
     public setContent(content: HTMLElement) {
-        this.modalContent.append(content);
+        this.modalContent.replaceChildren(content);
     }
 
     public getModalElements () {

@@ -14,9 +14,9 @@ const paths: IPaths[] = [
 
 export class HeaderView {
     render(root: HTMLElement) {
-        const headerContent = createElement({name: 'div', classes: ['header__content'], root})
-        const nav = createElement({name: 'nav', classes: ['header__menu'], root: headerContent})
-        const ul = createElement({name: 'ul', classes: ['header__list'], root: nav})
+        const headerContent = createElement({name: 'div', classes: ['header__content'], root}) as HTMLDivElement;
+        const nav = createElement({name: 'nav', classes: ['header__menu'], root: headerContent}) as HTMLOListElement
+        const ul = createElement({name: 'ul', classes: ['header__list'], root: nav}) as HTMLUListElement
 
         paths.forEach(({path, title}) => {
             const li = createElement({name: 'li', classes: ['header__list-item'], root: ul}) as HTMLLIElement

@@ -2,12 +2,12 @@ import type {ICharacter} from "../../data/types/types.ts";
 import {createElement} from "../../utils/createElement.ts";
 
 export class AvatarListView {
-    render(users: ICharacter[]) {
+    render(users: ICharacter[]): HTMLDivElement {
 
         const avatarList = createElement({
             name: 'div',
             classes: ['avatar__list'],
-        })
+        }) as HTMLDivElement;
 
         users.forEach(({emoji, id}) => {
             const emojiEl = createElement({
