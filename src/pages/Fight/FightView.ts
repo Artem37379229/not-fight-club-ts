@@ -20,9 +20,9 @@ export class FightView {
     constructor(private zoneController: ZoneController, private zoneView: ZoneView) {
     }
 
-    render(root: HTMLElement, userOptions: ICharacter & {name: string}, opponentOptions: TEnemies, logsOptions: ILogsOptions) {
-        const {health: userHealth, maxHealth: userMaxHealth, name: userName, damage: damageUser} = userOptions;
-        const {health: opponentHealth, maxHealth: opponentMaxHealth, name: opponentName, damage: damageOpponent} = opponentOptions;
+    render(root: HTMLElement, userOptions: ICharacter & {name: string}, opponentOptions: TEnemies) {
+        const {health: userHealth, maxHealth: userMaxHealth} = userOptions;
+        const {health: opponentHealth, maxHealth: opponentMaxHealth} = opponentOptions;
 
         this.userCard = new CardView(userOptions);
         this.userCard.render(root, ['card__user'], userHealth, userMaxHealth);

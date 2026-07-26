@@ -1,12 +1,14 @@
-import { createElement } from "../../utils/createElement.ts";
+import {createElement} from "../../utils/createElement.ts";
 
 import './HpBar.scss'
 
 export class HpBarView {
     private textElement!: HTMLSpanElement;
     private fillElement!: HTMLDivElement;
+    private maxHealth!: number
 
     render(root: HTMLElement, health: number, maxHealth: number) {
+        this.maxHealth = maxHealth;
 
         const barElement = createElement({
             name: 'div',
@@ -33,7 +35,7 @@ export class HpBarView {
         this.updateWidth(health);
     }
 
-    public getElements () {
+    public getElements() {
         return {
             textEl: this.textElement,
             fillEl: this.fillElement,

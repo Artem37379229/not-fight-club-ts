@@ -26,7 +26,15 @@ export class FightController {
         const state = this.store.getState();
 
         this.view.render(root, state.user, state.opponent)
+        this.logsController.init(root)
+
         this.bindEvents()
+
+        if (state.logsOptionsList != null) {
+            state.logsOptionsList.forEach((log: ILogsOptions) => {
+                this.logsController.render(log);
+            });
+        }
     }
 
     public updateStore() {
@@ -53,6 +61,9 @@ export class FightController {
 
         const successZonesOpponent = attackZonesOpponent.filter(zone => !defenceZones.includes(zone));
         const damageOpponent = calculateDamage(successZonesOpponent, state.opponent.damage)
+
+        const defenceZoneUser = attackZonesOpponent.filter(zone => defenceZones.includes(zone));
+        const defenceZoneOpponent = attackedZones.filter(zone => defenceZonesOpponent.includes(zone));
 
         const healthUser = state.user.health - damageOpponent
         const healthOpponent = state.opponent.health - damageUser
@@ -87,7 +98,8 @@ export class FightController {
                 this.store.setState({
                     ...this.store.getState(),
                     user: {...user, health: state.user.maxHealth},
-                    opponent: null
+                    opponent: null,
+                    logsOptionsList: null
                 });
                 window.location.hash = "character"
             })
@@ -97,22 +109,30 @@ export class FightController {
             return;
         }
 
-        this.store.setState({
-            ...state,
-            user,
-            opponent,
-        })
-
         const logsOptions: ILogsOptions = {
             userName: state.user.name,
             opponentName: state.opponent.name,
             damageUser: state.user.damage,
             damageOpponent: state.opponent.damage,
             successUserAttackZones: successZonesUser,
-            defenceUserZones: defenceZonesOpponent,
+            defenceUserZones: defenceZoneUser,
+            defenceOpponentZones: defenceZoneOpponent,
+            successOpponentAttackZones: successZonesOpponent
         }
 
-        this.logsController.init(this.root, logsOptions)
+
+        const currentLogsList = state.logsOptionsList || [];
+
+        const updatedLogsList = [...currentLogsList, logsOptions];
+
+        this.store.setState({
+            ...state,
+            user,
+            opponent,
+            logsOptionsList: updatedLogsList
+        })
+
+        this.logsController.render(logsOptions)
     }
 
     private bindEvents() {

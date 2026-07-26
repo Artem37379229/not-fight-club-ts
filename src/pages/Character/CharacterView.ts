@@ -1,10 +1,11 @@
 import {createElement} from "../../utils/createElement.ts";
 
 import "./Character.scss"
+import type {Store} from "../../core/Store.ts";
 
 export class CharacterView {
     private emoji: HTMLElement
-    public render (root: HTMLElement, name: string, emojiText: string) {
+    public render (root: HTMLElement, name: string, emojiText: string, store: Store) {
         const character = createElement({
             name: 'div',
             classes: ['character'],
@@ -28,6 +29,20 @@ export class CharacterView {
             text: emojiText,
             root: characterContent
         }) as HTMLElement
+
+        const wins = createElement({
+            name: 'div',
+            classes: ['character__wins'],
+            root: character,
+            text: String(store.getState().user.wins)
+        })
+
+        const loses = createElement({
+            name: 'div',
+            classes: ['character__wins'],
+            root: character,
+            text: String(store.getState().user.loses)
+        })
     }
 
     public getElements () {

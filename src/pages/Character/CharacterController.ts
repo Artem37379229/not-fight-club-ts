@@ -24,7 +24,7 @@ export class CharacterController {
         this.root = root;
         root.innerHTML = "";
         const {emoji, name} = this.getValue()
-        this.view.render(root, name, emoji)
+        this.view.render(root, name, emoji, this.store)
         this.bindEvents()
     }
 
