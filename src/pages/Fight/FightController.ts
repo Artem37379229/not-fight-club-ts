@@ -48,6 +48,7 @@ export class FightController {
 
     private logic() {
         const state = this.store.getState()
+
         const {attackedZones, defenceZones} = this.zoneController.getValueZones()
         const {attackZonesOpponent, defenceZonesOpponent} = setZones(state.opponent)
 
@@ -96,7 +97,7 @@ export class FightController {
         if (isGameOver) {
             this.modal.show(this.view.renderWinner(winner, healthOpponent, healthUser), () => {
                 this.store.setState({
-                    ...this.store.getState(),
+                    ...state,
                     user: {...user, health: state.user.maxHealth},
                     opponent: null,
                     logsOptionsList: null
@@ -134,6 +135,7 @@ export class FightController {
 
         this.logsController.render(logsOptions)
     }
+
 
     private bindEvents() {
         const [button]: Element = this.view.getElements()

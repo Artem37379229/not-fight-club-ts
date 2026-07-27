@@ -6,7 +6,6 @@ import {ZoneController} from "../../components/Zone/ZoneController.ts";
 import {ZoneView} from "../../components/Zone/ZoneView.ts";
 import {createElement} from "../../utils/createElement.ts";
 import type {HpBarController} from "../../components/HpBar/HpBarController.ts";
-import {type ILogsOptions, LogsView} from "../../components/Logs/LogsView.ts";
 
 export class FightView {
     private userCard: CardView | null = null;
