@@ -95,7 +95,7 @@ export class FightController {
 
 
         if (isGameOver) {
-            this.modal.show(this.view.renderWinner(winner, healthOpponent, healthUser), () => {
+            this.modal.show(this.view.renderWinner(winner), () => {
                 this.store.setState({
                     ...state,
                     user: {...user, health: state.user.maxHealth},
