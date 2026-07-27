@@ -11,5 +11,5 @@ export default defineConfig({
     build: {
         cssMinify: 'esbuild'
     },
-    base: '/not-figth-club-ts/',
+    base: '/dist/',
 });
