@@ -11,5 +11,5 @@ export default defineConfig({
     build: {
         cssMinify: 'esbuild'
     },
-    base: '/dist/',
+    base: '/not-fight-club-ts/',
 });
