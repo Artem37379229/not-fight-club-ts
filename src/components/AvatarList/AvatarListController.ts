@@ -8,7 +8,7 @@ export class AvatarListController {
     constructor(private view: AvatarListView, private store: Store, private modalController: ModalController, private callback: () => void) {}
 
     public init (): HTMLElement {
-        return this.view.render(characters) as HTMLElement;
+        return this.view.render(characters) as HTMLElement
     }
 
     public bindEvents () {
