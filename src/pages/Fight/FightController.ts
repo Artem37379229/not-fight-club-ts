@@ -21,9 +21,19 @@ export class FightController {
 
     private readonly root: HTMLElement
 
+    private userHp: number;
+    private opponentHp: number;
+    private wins: number;
+    private loses: number;
+
     public init(root: HTMLElement) {
         this.root = root;
         const state = this.store.getState();
+
+        this.userHp = state.user.health;
+        this.opponentHp = state.opponent.health;
+        this.wins = state.user.wins;
+        this.loses = state.user.loses;
 
         this.view.render(root, state.user, state.opponent)
         this.logsController.init(root)
@@ -48,92 +58,118 @@ export class FightController {
 
     private logic() {
         const state = this.store.getState()
+        const stateUser = state.user;
+        const stateOpponent = state.opponent;
+
+        const attackCountUser = stateUser.attackCount
+        const defenceCountUser = stateUser.defenceCount
 
         const {attackedZones, defenceZones} = this.zoneController.getValueZones()
-        const {attackZonesOpponent, defenceZonesOpponent} = setZones(state.opponent)
+        const {attackZonesOpponent, defenceZonesOpponent} = setZones(stateOpponent)
 
-        if (attackedZones.length > 1 || defenceZones.length > 2 || attackedZones.length < 1 || defenceZones.length < 1) {
-            this.bar.show("Выберите 1 атакующую зону и 2 защитных зоны")
+        if (attackedZones.length > attackCountUser || defenceZones.length > defenceCountUser || attackedZones.length < attackCountUser || defenceZones.length < defenceCountUser) {
+            this.bar.show(`Выберите ${attackCountUser} атакующую зону и ${defenceCountUser} защитных зоны`)
             return;
         }
 
-        const successZonesUser = attackedZones.filter(zone => !defenceZonesOpponent.includes(zone));
-        const damageUser = calculateDamage(successZonesUser, state.user.damage)
-
-        const successZonesOpponent = attackZonesOpponent.filter(zone => !defenceZones.includes(zone));
-        const damageOpponent = calculateDamage(successZonesOpponent, state.opponent.damage)
+        const userChance = Math.random() < 0.2
+        const opponentChance = Math.random() < 0.2
+        const criticalDamage = 1.5
 
         const defenceZoneUser = attackZonesOpponent.filter(zone => defenceZones.includes(zone));
         const defenceZoneOpponent = attackedZones.filter(zone => defenceZonesOpponent.includes(zone));
 
-        const healthUser = state.user.health - damageOpponent
-        const healthOpponent = state.opponent.health - damageUser
+        let successZonesUser = attackedZones.filter(zone => !defenceZonesOpponent.includes(zone))
+        let successZonesOpponent = attackZonesOpponent.filter(zone => !defenceZones.includes(zone))
+
+        let criticalZoneUser = []
+        let criticalZoneOpponent = []
+
+        if (defenceZoneOpponent.length >= 1 && userChance) {
+            console.log(1)
+            successZonesUser = [...attackedZones.filter(zone => !defenceZonesOpponent.includes(zone))]
+            criticalZoneUser = [defenceZoneOpponent[0]]
+            defenceZoneOpponent.shift()
+        }
+
+        if (defenceZoneUser.length >= 1 && opponentChance) {
+            console.log(1)
+            successZonesOpponent = [...attackZonesOpponent.filter(zone => !defenceZones.includes(zone))]
+            criticalZoneOpponent = [defenceZoneUser[0]]
+            defenceZoneUser.shift()
+        }
+
+        const criticalDamageUser = criticalZoneUser.length * stateUser.damage * criticalDamage
+        const criticalDamageOpponent = criticalZoneOpponent.length * stateOpponent.damage * criticalDamage
+
+        const damageUser = userChance ? calculateDamage(successZonesUser, stateUser.damage) + criticalDamageUser  : calculateDamage(successZonesUser, stateUser.damage)
+        const damageOpponent = opponentChance ? calculateDamage(successZonesOpponent, stateOpponent.damage) + criticalDamageOpponent : calculateDamage(successZonesOpponent, stateOpponent.damage)
+
+        this.userHp -= damageOpponent
+        this.opponentHp -= damageUser
 
         let isGameOver = false
         let winner = null
 
-        const user = {...state.user, health: healthUser}
-        const opponent = {...state.opponent, health: healthOpponent}
-
-        if (healthUser <= 0 && healthOpponent <= 0) {
-            isGameOver = true
-            winner = "Draw"
-        } else if (healthUser <= 0) {
-            isGameOver = true
-            winner = state.opponent.name
-            user.loses = state.user.loses + 1
-        } else if (healthOpponent <= 0) {
-            isGameOver = true;
-            winner = state.user.name
-            user.wins = state.user.wins + 1
-        }
-
         const {userBar, opponentBar} = this.view.getBars()
 
-        userBar?.setHp(healthUser, state.user.maxHealth)
-        opponentBar?.setHp(healthOpponent, state.opponent.maxHealth)
-
-
-        if (isGameOver) {
-            this.modal.show(this.view.renderWinner(winner), () => {
-                this.store.setState({
-                    ...state,
-                    user: {...user, health: state.user.maxHealth},
-                    opponent: null,
-                    logsOptionsList: null
-                });
-                window.location.hash = "character"
-            })
-
-            user.health = state.user.maxHealth;
-            opponent.health = state.opponent.maxHealth;
-            return;
-        }
+        userBar?.setHp(this.userHp, stateUser.maxHealth)
+        opponentBar?.setHp(this.opponentHp, stateOpponent.maxHealth)
 
         const logsOptions: ILogsOptions = {
-            userName: state.user.name,
-            opponentName: state.opponent.name,
-            damageUser: state.user.damage,
-            damageOpponent: state.opponent.damage,
+            userName: stateUser.name,
+            opponentName: stateOpponent.name,
+            damageUser: stateUser.damage,
+            damageOpponent: stateOpponent.damage,
             successUserAttackZones: successZonesUser,
             defenceUserZones: defenceZoneUser,
             defenceOpponentZones: defenceZoneOpponent,
-            successOpponentAttackZones: successZonesOpponent
+            successOpponentAttackZones: successZonesOpponent,
+            criticalZoneOpponent,
+            criticalZoneUser,
+            criticalDamageUser,
+            criticalDamageOpponent,
         }
 
-
         const currentLogsList = state.logsOptionsList || [];
-
         const updatedLogsList = [...currentLogsList, logsOptions];
+
+        this.logsController.render(logsOptions)
 
         this.store.setState({
             ...state,
-            user,
-            opponent,
+            user: {...stateUser, health: this.userHp},
+            opponent: {...stateOpponent, health: this.opponentHp},
             logsOptionsList: updatedLogsList
         })
 
-        this.logsController.render(logsOptions)
+        if (this.userHp <= 0 && this.opponentHp <= 0) {
+            isGameOver = true
+            winner = "Draw"
+            return;
+        } else if (this.userHp <= 0) {
+            this.loses++;
+            isGameOver = true
+            winner = stateOpponent.name
+        } else if (this.opponentHp <= 0) {
+            this.wins++;
+            isGameOver = true;
+            winner = stateUser.name
+        }
+
+        if (isGameOver) {
+            this.store.setState({
+                ...state,
+                user: {...stateUser, health: stateUser.maxHealth, wins: this.wins, loses: this.loses},
+                opponent: null,
+                logsOptionsList: null
+            });
+
+            this.modal.show(this.view.renderWinner(winner), () => {
+                window.location.hash = "character"
+            })
+            return;
+        }
     }
 
 

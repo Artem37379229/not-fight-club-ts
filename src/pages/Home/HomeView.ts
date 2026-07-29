@@ -6,7 +6,7 @@ export class HomeView {
     public render (root: HTMLElement) {
         const figthLink = createAnchorElement({
             name: 'a',
-            href: '/#fight',
+            href: '#fight',
             classes: ['fight__link'],
             root,
             text: 'Fight'

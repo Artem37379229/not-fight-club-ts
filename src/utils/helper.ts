@@ -29,7 +29,7 @@ function setZones (obj: TEnemies) {
     }
 }
 
-function calculateDamage (arrZones: string[], damage) {
+function calculateDamage (arrZones: string[], damage: number): number {
     return arrZones.length * damage
 }
 
